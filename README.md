@@ -1,1 +1,1 @@
-# rn-onboard-ui-app
+# rn-intro-app
