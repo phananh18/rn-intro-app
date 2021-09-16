@@ -18,3 +18,5 @@ const slide =[
         image: require('../images/group3.png'),
       },
 ]
+
+export default slide;

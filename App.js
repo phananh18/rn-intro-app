@@ -1,112 +1,163 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, Image, Button, StatusBar } from 'react-native';
+import AppIntroSlider from 'react-native-app-intro-slider';
+import LinearGradient from 'react-native-linear-gradient';
+import slides from './src/assets/data/slide'
+import colors from './src/assets/colors/colors';
 
-import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const App = () => {
+  const [showRealApp, setShowRealApp] = useState(true);
+  const renderNextButton = () => {
+    return (
+      <View style={styles.textWrapper}>
+        <Text style={styles.text}>Next</Text>
+      </View>
+    )
+  }
+  const renderDoneButton = () => {
+    return (
+      <LinearGradient
+        start={{ x: 0, y: 0.5 }} 
+        end={{ x: 1, y: 0.5 }}
+        colors={['#A5C8FF', '#23286E']}
+        style={styles.linearGradient}
+      >
+        <Text style={styles.buttonText}>Done</Text>
+      </LinearGradient>
+    )
+  }
+  const renderPrevButton = () => {
+    return (
+      <View style={styles.textWrapper}>
+        <Text style={styles.text}>Prev</Text>
+      </View>
+    )
+  }
+  const onDone = () => {
+    setShowRealApp(false);
+  };
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.slide}>
+        <Image style={styles.introImage} source={item.image} />
+        <View>
+          <Text style={styles.introTitle}>{item.title}</Text>
+          <Text style={styles.introText}>{item.text}</Text>
+        </View>
+      </View>
+    );
+  };
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View style={{ flex: 1 }}>
+      <StatusBar translucent backgroundColor='transparent' />
+      {showRealApp ? (
+        <AppIntroSlider
+          data={slides}
+          renderItem={renderItem}
+          renderDoneButton={renderDoneButton}
+          renderNextButton={renderNextButton}
+          renderPrevButton={renderPrevButton}
+          showPrevButton
+          dotStyle={styles.dotStyle}
+          activeDotStyle={styles.activeDotStyle}
+          onDone={onDone}
+        />
+      ) : (
+        <View style={styles.container}>
+          <Text style={styles.titleStyle}>
+            React Native App Intro Slider using AppIntroSlider
+          </Text>
+          <Text style={styles.paragraphStyle}>
+            This will be your screen when you click Skip from any slide or
+            Done button at last
+          </Text>
+          <Button
+            title="Show Intro Slider again"
+            onPress={() => setShowRealApp(true)}
+          />
+        </View>
+      )}
     </View>
   );
 };
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
+export default App;
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  sectionTitle: {
+  introImage: {
+    marginHorizontal: 20,
+  },
+  introTitle: {
+    fontFamily: 'OpenSans-Bold',
     fontSize: 24,
-    fontWeight: '600',
+    color: colors.black,
+    marginHorizontal: 40,
+    textAlign: 'center',
   },
-  sectionDescription: {
-    marginTop: 8,
+  introText: {
+    marginTop: 20,
+    color: colors.gray,
+    fontSize: 14,
+    fontFamily: 'OpenSans-SemiBold',
+    marginHorizontal: 40,
+    textAlign: 'center',
+  },
+  dotStyle: {
+    backgroundColor: colors.blueFaded
+  },
+  activeDotStyle: {
+    backgroundColor: colors.blue
+  },
+  text: {
+    color: colors.blue,
+    fontFamily: 'OpenSans-SemiBold',
+    fontSize: 14,
+  },
+  textWrapper: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  linearGradient: {
+    flex: 1,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 25,
+    marginRight:-30,
+  },
+  buttonText: {
+    fontSize: 14,
+    fontFamily: 'OpenSans-SemiBold',
+    textAlign: 'center',
+    margin: 10,
+    color: '#ffffff',
+    backgroundColor: 'transparent',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    padding: 10,
+    justifyContent: 'center',
+  },
+  titleStyle: {
+    padding: 10,
+    textAlign: 'center',
     fontSize: 18,
-    fontWeight: '400',
+    fontFamily: 'OpenSans-Bold',
   },
-  highlight: {
-    fontWeight: '700',
+  paragraphStyle: {
+    padding: 20,
+    textAlign: 'center',
+    fontSize: 16,
+    fontFamily: 'OpenSans-SemiBold',
+    color: colors.gray
   },
 });
-
-export default App;
